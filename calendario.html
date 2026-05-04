@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Calendario de Eventos - Restaurante Italiano</title>
+</head>
+<body>
+  <header class="site-header">
+    <h1>Trattoria Bella - Panel Admin</h1>
+    <nav class="main-nav">
+      <ul class="nav-list">
+        <li><a href="calendario.html" class="nav-link active">Calendario</a></li>
+        <li><a href="reservas.html" class="nav-link">Reservas</a></li>
+        <li><a href="movimientos.html" class="nav-link">Movimientos</a></li>
+        <li><a href="galeria.html" class="nav-link">Galería</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page-content">
+    <section class="event-form-section">
+      <h2>Agregar Evento</h2>
+      <form id="event-form" class="event-form">
+        <label for="event-title">Título del evento</label>
+        <input type="text" id="event-title" name="title" required />
+
+        <label for="event-date">Fecha</label>
+        <input type="date" id="event-date" name="date" required />
+
+        <label for="event-description">Descripción</label>
+        <textarea id="event-description" name="description"></textarea>
+
+        <button type="submit" class="btn-primary">Agregar Evento</button>
+      </form>
+    </section>
+
+    <section class="event-list-section">
+      <h2>Eventos Programados</h2>
+      <ul id="event-list" class="event-list"></ul>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const form = document.getElementById('event-form');
+      const list = document.getElementById('event-list');
+      const events = JSON.parse(localStorage.getItem('events') || '[]');
+
+      function render() {
+        list.innerHTML = '';
+        events
+          .sort((a, b) => a.date.localeCompare(b.date))
+          .forEach((ev, i) => {
+            const li = document.createElement('li');
+            li.className = 'event-item';
+            li.innerHTML = `
+              <strong>${ev.date}</strong> - ${ev.title}
+              <p>${ev.description || ''}</p>
+              <button data-i="${i}" class="btn-delete">Eliminar</button>
+            `;
+            list.appendChild(li);
+          });
+      }
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const data = new FormData(form);
+        events.push({
+          title: data.get('title'),
+          date: data.get('date'),
+          description: data.get('description'),
+        });
+        localStorage.setItem('events', JSON.stringify(events));
+        form.reset();
+        render();
+      });
+
+      list.addEventListener('click', (e) => {
+        if (e.target.classList.contains('btn-delete')) {
+          events.splice(Number(e.target.dataset.i), 1);
+          localStorage.setItem('events', JSON.stringify(events));
+          render();
+        }
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>
