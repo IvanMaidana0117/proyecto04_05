@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Il Mattarello — Stock</title>
+</head>
+<body class="page page--inventario">
+  <header class="header">
+    <h1 class="header__title">Control de Stock</h1>
+    <p class="header__subtitle">Insumos del bodegón</p>
+  </header>
+
+  <nav class="nav">
+    <ul class="nav__list">
+      <li class="nav__item"><a class="nav__link" href="index.html">Dashboard</a></li>
+      <li class="nav__item"><a class="nav__link nav__link--active" href="inventario.html">Stock</a></li>
+      <li class="nav__item"><a class="nav__link" href="perfil.html">Ficha</a></li>
+      <li class="nav__item"><a class="nav__link" href="configuracion.html">Configuración</a></li>
+      <li class="nav__item"><a class="nav__link" href="#">Calendario</a></li>
+      <li class="nav__item"><a class="nav__link" href="#">Reservas</a></li>
+      <li class="nav__item"><a class="nav__link" href="#">Historial</a></li>
+      <li class="nav__item"><a class="nav__link" href="#">Galería</a></li>
+    </ul>
+  </nav>
+
+  <main class="main">
+    <section class="inventario__toolbar">
+      <input
+        type="text"
+        id="buscador-insumo"
+        class="inventario__buscador"
+        placeholder="Buscar insumo (ej: harina, tomate...)"
+      />
+      <button class="btn btn--primary" id="btn-agregar-insumo">+ Agregar Insumo</button>
+    </section>
+
+    <section class="inventario__tabla-wrapper">
+      <table class="inventario__tabla">
+        <thead>
+          <tr>
+            <th>Insumo</th><th>Categoría</th><th>Cantidad</th><th>Unidad</th><th>Estado</th>
+          </tr>
+        </thead>
+        <tbody id="inventario-tbody"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <!-- Modal simulado -->
+  <div class="modal modal--hidden" id="modal-insumo">
+    <div class="modal__content">
+      <h2 class="modal__title">Agregar Insumo</h2>
+      <form class="modal__form" id="form-insumo">
+        <label class="form__label">Insumo
+          <input class="form__input" name="nombre" required />
+        </label>
+        <label class="form__label">Categoría
+          <input class="form__input" name="categoria" required />
+        </label>
+        <label class="form__label">Cantidad
+          <input class="form__input" name="cantidad" type="number" required />
+        </label>
+        <label class="form__label">Unidad
+          <input class="form__input" name="unidad" placeholder="kg, lt, u..." required />
+        </label>
+        <div class="modal__actions">
+          <button type="button" class="btn btn--secondary" id="btn-cancelar">Cancelar</button>
+          <button type="submit" class="btn btn--primary">Guardar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const insumos = [
+      { nombre: "Harina 0000", categoria: "Secos", cantidad: 45, unidad: "kg" },
+      { nombre: "Tomate triturado", categoria: "Conservas", cantidad: 8, unidad: "lt" },
+      { nombre: "Queso Mozzarella", categoria: "Lácteos", cantidad: 3, unidad: "kg" },
+      { nombre: "Queso Parmesano", categoria: "Lácteos", cantidad: 1.2, unidad: "kg" },
+      { nombre: "Albahaca fresca", categoria: "Verdulería", cantidad: 0.5, unidad: "kg" },
+      { nombre: "Aceite de oliva", categoria: "Aceites", cantidad: 12, unidad: "lt" },
+      { nombre: "Huevos", categoria: "Frescos", cantidad: 60, unidad: "u" },
+      { nombre: "Vino Malbec", categoria: "Bebidas", cantidad: 24, unidad: "u" },
+      { nombre: "Carne picada", categoria: "Carnicería", cantidad: 2, unidad: "kg" },
+      { nombre: "Espinaca", categoria: "Verdulería", cantidad: 0.8, unidad: "kg" },
+    ];
+
+    const UMBRAL_BAJO = 5;
+    const tbody = document.getElementById("inventario-tbody");
+    const buscador = document.getElementById("buscador-insumo");
+
+    function render(filtro = "") {
+      const f = filtro.trim().toLowerCase();
+      tbody.innerHTML = insumos
+        .filter(i => i.nombre.toLowerCase().includes(f))
+        .map(i => {
+          const bajo = i.cantidad <= UMBRAL_BAJO;
+          const estadoClass = bajo ? "badge badge--bajo" : "badge badge--ok";
+          const estadoLabel = bajo ? "Stock Bajo" : "OK";
+          return `
+            <tr class="inventario__row">
+              <td>${i.nombre}</td>
+              <td>${i.categoria}</td>
+              <td>${i.cantidad}</td>
+              <td>${i.unidad}</td>
+              <td><span class="${estadoClass}">${estadoLabel}</span></td>
+            </tr>`;
+        }).join("");
+    }
+    render();
+
+    buscador.addEventListener("input", e => render(e.target.value));
+
+    // Modal
+    const modal = document.getElementById("modal-insumo");
+    document.getElementById("btn-agregar-insumo").addEventListener("click", () => modal.classList.remove("modal--hidden"));
+    document.getElementById("btn-cancelar").addEventListener("click", () => modal.classList.add("modal--hidden"));
+    document.getElementById("form-insumo").addEventListener("submit", e => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      insumos.push({
+        nombre: fd.get("nombre"),
+        categoria: fd.get("categoria"),
+        cantidad: parseFloat(fd.get("cantidad")),
+        unidad: fd.get("unidad"),
+      });
+      e.target.reset();
+      modal.classList.add("modal--hidden");
+      render(buscador.value);
+    });
+  </script>
+</body>
+</html>
