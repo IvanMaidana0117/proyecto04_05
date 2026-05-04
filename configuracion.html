@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Il Mattarello — Configuración</title>
+</head>
+<body class="page page--configuracion">
+  <header class="header">
+    <h1 class="header__title">Configuración del Sistema</h1>
+    <p class="header__subtitle">Ajustes técnicos y del salón</p>
+  </header>
+
+  <nav class="nav">
+    <ul class="nav__list">
+      <li class="nav__item"><a class="nav__link" href="index.html">Dashboard</a></li>
+      <li class="nav__item"><a class="nav__link" href="inventario.html">Stock</a></li>
+      <li class="nav__item"><a class="nav__link" href="perfil.html">Ficha</a></li>
+      <li class="nav__item"><a class="nav__link nav__link--active" href="configuracion.html">Configuración</a></li>
+      <li class="nav__item"><a class="nav__link" href="#">Calendario</a></li>
+      <li class="nav__item"><a class="nav__link" href="#">Reservas</a></li>
+      <li class="nav__item"><a class="nav__link" href="#">Historial</a></li>
+      <li class="nav__item"><a class="nav__link" href="#">Galería</a></li>
+    </ul>
+  </nav>
+
+  <main class="main">
+    <section class="config-seccion config-seccion--mesas">
+      <h2 class="config-seccion__titulo">Gestión de Mesas</h2>
+      <form class="mesas__form" id="form-mesa">
+        <input class="form__input" name="numero" type="number" placeholder="Nº mesa" required />
+        <input class="form__input" name="capacidad" type="number" placeholder="Capacidad" required />
+        <select class="form__input" name="ubicacion">
+          <option value="Salón">Salón</option>
+          <option value="Vereda">Vereda</option>
+        </select>
+        <button class="btn btn--primary" type="submit">Añadir</button>
+      </form>
+      <table class="mesas__tabla">
+        <thead>
+          <tr><th>Nº</th><th>Capacidad</th><th>Ubicación</th><th></th></tr>
+        </thead>
+        <tbody id="mesas-tbody"></tbody>
+      </table>
+    </section>
+
+    <section class="config-seccion config-seccion--toggles">
+      <h2 class="config-seccion__titulo">Interruptores del sistema</h2>
+      <label class="toggle">
+        <input type="checkbox" class="toggle__input" id="toggle-ejecutivo" checked />
+        <span class="toggle__label">Activar Menú Ejecutivo</span>
+      </label>
+      <label class="toggle">
+        <input type="checkbox" class="toggle__input" id="toggle-reservas" checked />
+        <span class="toggle__label">Habilitar Reservas Web</span>
+      </label>
+      <label class="toggle">
+        <input type="checkbox" class="toggle__input" id="toggle-mantenimiento" />
+        <span class="toggle__label">Modo Mantenimiento</span>
+      </label>
+    </section>
+
+    <section class="config-seccion config-seccion--seguridad">
+      <h2 class="config-seccion__titulo">Seguridad</h2>
+      <form class="seguridad__form" id="form-password">
+        <label class="form__label">Contraseña actual
+          <input class="form__input" type="password" name="actual" required />
+        </label>
+        <label class="form__label">Nueva contraseña
+          <input class="form__input" type="password" name="nueva" required />
+        </label>
+        <label class="form__label">Repetir nueva contraseña
+          <input class="form__input" type="password" name="repetir" required />
+        </label>
+        <button class="btn btn--primary" type="submit">Actualizar contraseña</button>
+      </form>
+    </section>
+  </main>
+
+  <script>
+    const mesas = [
+      { numero: 1, capacidad: 2, ubicacion: "Vereda" },
+      { numero: 2, capacidad: 4, ubicacion: "Salón" },
+      { numero: 3, capacidad: 6, ubicacion: "Salón" },
+    ];
+    const tbody = document.getElementById("mesas-tbody");
+
+    function renderMesas() {
+      tbody.innerHTML = mesas.map((m, i) => `
+        <tr class="mesas__row">
+          <td>${m.numero}</td>
+          <td>${m.capacidad}</td>
+          <td>${m.ubicacion}</td>
+          <td><button class="btn btn--danger" data-idx="${i}">Eliminar</button></td>
+        </tr>`).join("");
+      tbody.querySelectorAll("button[data-idx]").forEach(btn => {
+        btn.addEventListener("click", () => {
+          mesas.splice(parseInt(btn.dataset.idx), 1);
+          renderMesas();
+        });
+      });
+    }
+    renderMesas();
+
+    document.getElementById("form-mesa").addEventListener("submit", e => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      mesas.push({
+        numero: parseInt(fd.get("numero")),
+        capacidad: parseInt(fd.get("capacidad")),
+        ubicacion: fd.get("ubicacion"),
+      });
+      e.target.reset();
+      renderMesas();
+    });
+
+    document.getElementById("form-password").addEventListener("submit", e => {
+      e.preventDefault();
+      const fd = new FormData(e.target);
+      if (fd.get("nueva") !== fd.get("repetir")) {
+        alert("Las contraseñas no coinciden.");
+        return;
+      }
+      alert("Contraseña actualizada (simulado).");
+      e.target.reset();
+    });
+  </script>
+</body>
+</html>
