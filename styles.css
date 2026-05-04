@@ -363,3 +363,52 @@ input[type="checkbox"], input[type="radio"] { width: auto; accent-color: var(--p
   .charts-grid { grid-template-columns: 1fr; }
   .horarios { grid-template-columns: 1fr; }
 }
+
+/* ---------- Comandas / Section title ---------- */
+.comandas { background: var(--surface); border:1px solid var(--border); border-radius: var(--radius); padding: 1.25rem; box-shadow: var(--shadow); }
+.comandas__title { color: var(--gold); margin-bottom: 1rem; }
+
+/* ---------- Reservas / Mesas form (inline) ---------- */
+.reservas__form, .mesas__form {
+  display: flex; flex-wrap: wrap; gap: .75rem; margin-bottom: 1.25rem;
+  background: var(--surface); border:1px solid var(--border); border-radius: var(--radius); padding: 1rem; box-shadow: var(--shadow);
+}
+.reservas__form input, .reservas__form select, .mesas__form input, .mesas__form select { flex:1; min-width: 160px; }
+
+/* ---------- Config secciones ---------- */
+.config-seccion {
+  background: var(--surface); border:1px solid var(--border); border-radius: var(--radius);
+  padding: 1.5rem; margin-bottom: 1.5rem; box-shadow: var(--shadow);
+}
+.config-seccion__titulo { color: var(--gold); margin-bottom: 1rem; border-bottom: 1px solid var(--border); padding-bottom: .5rem; }
+.toggle { cursor: pointer; }
+.toggle__input { margin-right: .75rem; }
+
+/* ---------- Calendario ---------- */
+.calendario { background: var(--surface); border:1px solid var(--border); border-radius: var(--radius); padding: 1.5rem; box-shadow: var(--shadow); }
+.calendario__toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; gap: 1rem; }
+.calendario__titulo { color: var(--gold); font-family: var(--font-title); margin: 0; text-transform: capitalize; }
+.calendario__grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: .35rem; }
+.calendario__dia-header {
+  text-align: center; padding: .5rem; font-weight: 600; color: var(--gold-soft);
+  background: rgba(128,0,0,.15); border-radius: var(--radius); font-size: .85rem;
+  text-transform: uppercase; letter-spacing: .5px;
+}
+.calendario__dia {
+  min-height: 90px; padding: .5rem; background: var(--surface-2);
+  border:1px solid var(--border); border-radius: var(--radius);
+  display: flex; flex-direction: column; gap: .35rem; font-size: .8rem;
+}
+.calendario__dia--vacio { background: transparent; border: 1px dashed var(--border); }
+.calendario__dia--evento { border-color: var(--primary); }
+.calendario__numero { font-weight: 700; color: var(--gold); }
+.calendario__leyenda { display: flex; gap: .75rem; margin-top: 1rem; justify-content: center; }
+
+/* ---------- Headings inside sections ---------- */
+.reservas h2, .galeria-section h2 { color: var(--gold); margin-bottom: 1rem; }
+
+/* ---------- Buttons spacing in tables ---------- */
+tbody td .btn { padding: .35rem .75rem; font-size: .75rem; }
+
+/* ---------- Chart.js dark text ---------- */
+canvas { background: transparent; }
