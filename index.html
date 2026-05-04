@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Il Mattarello — Dashboard</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="styles.css" />
 </head>
 <body class="page page--dashboard">
   <header class="header">
@@ -18,10 +19,10 @@
       <li class="nav__item"><a class="nav__link" href="inventario.html">Stock</a></li>
       <li class="nav__item"><a class="nav__link" href="perfil.html">Ficha</a></li>
       <li class="nav__item"><a class="nav__link" href="configuracion.html">Configuración</a></li>
-      <li class="nav__item"><a class="nav__link" href="#">Calendario</a></li>
-      <li class="nav__item"><a class="nav__link" href="#">Reservas</a></li>
-      <li class="nav__item"><a class="nav__link" href="#">Historial</a></li>
-      <li class="nav__item"><a class="nav__link" href="#">Galería</a></li>
+      <li class="nav__item"><a class="nav__link" href="calendario.html">Calendario</a></li>
+      <li class="nav__item"><a class="nav__link" href="reservas.html">Reservas</a></li>
+      <li class="nav__item"><a class="nav__link" href="movimientos.html">Historial</a></li>
+      <li class="nav__item"><a class="nav__link" href="galeria.html">Galería</a></li>
     </ul>
   </nav>
 
@@ -86,7 +87,11 @@
       </tr>
     `).join("");
 
-    // --- Gráfico de barras ---
+    // --- Estilos Chart.js para tema oscuro ---
+    Chart.defaults.color = "#e0e0e0";
+    Chart.defaults.borderColor = "#333";
+    Chart.defaults.font.family = "'Inter', sans-serif";
+
     new Chart(document.getElementById("chart-consumo-semanal"), {
       type: "bar",
       data: {
@@ -94,23 +99,26 @@
         datasets: [{
           label: "Kg de pasta",
           data: [12, 18, 15, 22, 35, 48, 40],
-          backgroundColor: "#c0392b"
+          backgroundColor: "#800000",
+          borderColor: "#f5e6be",
+          borderWidth: 1
         }]
       },
-      options: { responsive: true }
+      options: { responsive: true, plugins: { legend: { labels: { color: "#f5e6be" } } } }
     });
 
-    // --- Gráfico de torta ---
     new Chart(document.getElementById("chart-distribucion"), {
       type: "pie",
       data: {
         labels: ["Pastas","Entradas","Vinos"],
         datasets: [{
           data: [55, 25, 20],
-          backgroundColor: ["#c0392b","#e67e22","#8e44ad"]
+          backgroundColor: ["#800000","#c0392b","#f5e6be"],
+          borderColor: "#1e1e1e",
+          borderWidth: 2
         }]
       },
-      options: { responsive: true }
+      options: { responsive: true, plugins: { legend: { labels: { color: "#f5e6be" } } } }
     });
   </script>
 </body>
