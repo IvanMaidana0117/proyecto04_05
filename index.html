@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Il Mattarello — Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body class="page page--dashboard">
+  <header class="header">
+    <h1 class="header__title">Il Mattarello — Pastas &amp; Bodegón</h1>
+    <p class="header__subtitle">Panel de control general</p>
+  </header>
+
+  <nav class="nav">
+    <ul class="nav__list">
+      <li class="nav__item"><a class="nav__link nav__link--active" href="index.html">Dashboard</a></li>
+      <li class="nav__item"><a class="nav__link" href="inventario.html">Stock</a></li>
+      <li class="nav__item"><a class="nav__link" href="perfil.html">Ficha</a></li>
+      <li class="nav__item"><a class="nav__link" href="configuracion.html">Configuración</a></li>
+      <li class="nav__item"><a class="nav__link" href="#">Calendario</a></li>
+      <li class="nav__item"><a class="nav__link" href="#">Reservas</a></li>
+      <li class="nav__item"><a class="nav__link" href="#">Historial</a></li>
+      <li class="nav__item"><a class="nav__link" href="#">Galería</a></li>
+    </ul>
+  </nav>
+
+  <main class="main">
+    <section class="kpi-grid">
+      <article class="kpi-card kpi-card--cubiertos">
+        <h3 class="kpi-card__label">Cubiertos hoy</h3>
+        <p class="kpi-card__value" id="kpi-cubiertos">87</p>
+      </article>
+      <article class="kpi-card kpi-card--ventas">
+        <h3 class="kpi-card__label">Ventas estimadas</h3>
+        <p class="kpi-card__value" id="kpi-ventas">$ 245.300</p>
+      </article>
+      <article class="kpi-card kpi-card--plato">
+        <h3 class="kpi-card__label">Plato estrella</h3>
+        <p class="kpi-card__value" id="kpi-plato">Sorrentinos de la Nonna</p>
+      </article>
+      <article class="kpi-card kpi-card--ocupacion">
+        <h3 class="kpi-card__label">Estado del Salón</h3>
+        <p class="kpi-card__value" id="kpi-ocupacion">72% ocupación</p>
+      </article>
+    </section>
+
+    <section class="charts-grid">
+      <div class="chart-card chart-card--bar">
+        <h3 class="chart-card__title">Consumo semanal de pastas</h3>
+        <canvas id="chart-consumo-semanal"></canvas>
+      </div>
+      <div class="chart-card chart-card--pie">
+        <h3 class="chart-card__title">Distribución de pedidos</h3>
+        <canvas id="chart-distribucion"></canvas>
+      </div>
+    </section>
+
+    <section class="comandas">
+      <h2 class="comandas__title">Comandas en preparación</h2>
+      <table class="comandas__table">
+        <thead>
+          <tr>
+            <th>ID</th><th>Mesa</th><th>Plato</th><th>Tiempo</th>
+          </tr>
+        </thead>
+        <tbody id="comandas-tbody"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    // --- Datos simulados ---
+    const comandas = [
+      { id: "#1042", mesa: 4, plato: "Sorrentinos de la Nonna", tiempo: "8 min" },
+      { id: "#1043", mesa: 7, plato: "Lasagna a la Bolognesa", tiempo: "15 min" },
+      { id: "#1044", mesa: 2, plato: "Ravioles de Espinaca", tiempo: "5 min" },
+      { id: "#1045", mesa: 9, plato: "Ñoquis con Tuco", tiempo: "12 min" },
+      { id: "#1046", mesa: 1, plato: "Milanesa Napolitana", tiempo: "20 min" },
+    ];
+
+    const tbody = document.getElementById("comandas-tbody");
+    tbody.innerHTML = comandas.map(c => `
+      <tr class="comandas__row">
+        <td>${c.id}</td><td>${c.mesa}</td><td>${c.plato}</td><td>${c.tiempo}</td>
+      </tr>
+    `).join("");
+
+    // --- Gráfico de barras ---
+    new Chart(document.getElementById("chart-consumo-semanal"), {
+      type: "bar",
+      data: {
+        labels: ["Lun","Mar","Mié","Jue","Vie","Sáb","Dom"],
+        datasets: [{
+          label: "Kg de pasta",
+          data: [12, 18, 15, 22, 35, 48, 40],
+          backgroundColor: "#c0392b"
+        }]
+      },
+      options: { responsive: true }
+    });
+
+    // --- Gráfico de torta ---
+    new Chart(document.getElementById("chart-distribucion"), {
+      type: "pie",
+      data: {
+        labels: ["Pastas","Entradas","Vinos"],
+        datasets: [{
+          data: [55, 25, 20],
+          backgroundColor: ["#c0392b","#e67e22","#8e44ad"]
+        }]
+      },
+      options: { responsive: true }
+    });
+  </script>
+</body>
+</html>
