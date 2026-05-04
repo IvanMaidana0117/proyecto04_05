@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Il Mattarello — Ficha</title>
+</head>
+<body class="page page--perfil">
+  <header class="header">
+    <h1 class="header__title">Ficha del Restaurante</h1>
+    <p class="header__subtitle">Identidad de Il Mattarello</p>
+  </header>
+
+  <nav class="nav">
+    <ul class="nav__list">
+      <li class="nav__item"><a class="nav__link" href="index.html">Dashboard</a></li>
+      <li class="nav__item"><a class="nav__link" href="inventario.html">Stock</a></li>
+      <li class="nav__item"><a class="nav__link nav__link--active" href="perfil.html">Ficha</a></li>
+      <li class="nav__item"><a class="nav__link" href="configuracion.html">Configuración</a></li>
+      <li class="nav__item"><a class="nav__link" href="#">Calendario</a></li>
+      <li class="nav__item"><a class="nav__link" href="#">Reservas</a></li>
+      <li class="nav__item"><a class="nav__link" href="#">Historial</a></li>
+      <li class="nav__item"><a class="nav__link" href="#">Galería</a></li>
+    </ul>
+  </nav>
+
+  <main class="main">
+    <form class="perfil__form" id="form-perfil">
+      <section class="perfil__seccion perfil__seccion--datos">
+        <h2 class="perfil__titulo">Datos de Il Mattarello</h2>
+        <label class="form__label">Nombre
+          <input class="form__input" name="nombre" value="Il Mattarello: Pastas & Bodegón" />
+        </label>
+        <label class="form__label">Dirección
+          <input class="form__input" name="direccion" value="Av. Corrientes 1234, CABA" />
+        </label>
+        <label class="form__label">Teléfono
+          <input class="form__input" name="telefono" value="+54 11 4567-8900" />
+        </label>
+        <label class="form__label">Instagram
+          <input class="form__input" name="instagram" value="@ilmattarello" />
+        </label>
+        <label class="form__label">Facebook
+          <input class="form__input" name="facebook" value="/ilmattarello" />
+        </label>
+      </section>
+
+      <section class="perfil__seccion perfil__seccion--horarios">
+        <h2 class="perfil__titulo">Horarios de atención</h2>
+        <div class="horarios">
+          <div class="horarios__turno">
+            <h3 class="horarios__subtitulo">Mediodía</h3>
+            <label class="form__label">Apertura
+              <input class="form__input" type="time" value="12:00" />
+            </label>
+            <label class="form__label">Cierre
+              <input class="form__input" type="time" value="15:30" />
+            </label>
+          </div>
+          <div class="horarios__turno">
+            <h3 class="horarios__subtitulo">Noche</h3>
+            <label class="form__label">Apertura
+              <input class="form__input" type="time" value="20:00" />
+            </label>
+            <label class="form__label">Cierre
+              <input class="form__input" type="time" value="00:30" />
+            </label>
+          </div>
+        </div>
+      </section>
+
+      <section class="perfil__seccion perfil__seccion--logo">
+        <h2 class="perfil__titulo">Logo</h2>
+        <label class="form__label">Subir logo
+          <input class="form__input" type="file" id="input-logo" accept="image/*" />
+        </label>
+        <div class="logo-preview">
+          <img id="logo-preview-img" class="logo-preview__img" alt="Vista previa del logo" />
+        </div>
+      </section>
+
+      <button type="submit" class="btn btn--primary">Guardar cambios</button>
+    </form>
+  </main>
+
+  <script>
+    const inputLogo = document.getElementById("input-logo");
+    const previewImg = document.getElementById("logo-preview-img");
+
+    inputLogo.addEventListener("change", e => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = ev => { previewImg.src = ev.target.result; };
+      reader.readAsDataURL(file);
+    });
+
+    document.getElementById("form-perfil").addEventListener("submit", e => {
+      e.preventDefault();
+      alert("Cambios guardados (simulado).");
+    });
+  </script>
+</body>
+</html>
