@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Reservas - Restaurante Italiano</title>
+</head>
+<body>
+  <header class="site-header">
+    <h1>Trattoria Bella - Panel Admin</h1>
+    <nav class="main-nav">
+      <ul class="nav-list">
+        <li><a href="calendario.html" class="nav-link">Calendario</a></li>
+        <li><a href="reservas.html" class="nav-link active">Reservas</a></li>
+        <li><a href="movimientos.html" class="nav-link">Movimientos</a></li>
+        <li><a href="galeria.html" class="nav-link">Galería</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page-content">
+    <section class="reservation-form-section">
+      <h2>Registrar Reserva</h2>
+      <form id="reservation-form" class="reservation-form">
+        <label for="client-name">Nombre del cliente</label>
+        <input type="text" id="client-name" name="name" required />
+
+        <label for="client-phone">Teléfono</label>
+        <input type="tel" id="client-phone" name="phone" required />
+
+        <label for="reservation-date">Fecha</label>
+        <input type="date" id="reservation-date" name="date" required />
+
+        <label for="reservation-time">Hora</label>
+        <input type="time" id="reservation-time" name="time" required />
+
+        <label for="guests">Número de personas</label>
+        <input type="number" id="guests" name="guests" min="1" required />
+
+        <button type="submit" class="btn-primary">Registrar</button>
+      </form>
+    </section>
+
+    <section class="reservation-list-section">
+      <h2>Reservas Registradas</h2>
+      <table class="reservation-table">
+        <thead>
+          <tr>
+            <th>Cliente</th>
+            <th>Teléfono</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Personas</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="reservation-list"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const form = document.getElementById('reservation-form');
+      const tbody = document.getElementById('reservation-list');
+      const reservations = JSON.parse(localStorage.getItem('reservations') || '[]');
+
+      function render() {
+        tbody.innerHTML = '';
+        reservations.forEach((r, i) => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>${r.name}</td>
+            <td>${r.phone}</td>
+            <td>${r.date}</td>
+            <td>${r.time}</td>
+            <td>${r.guests}</td>
+            <td><button data-i="${i}" class="btn-delete">Cancelar</button></td>
+          `;
+          tbody.appendChild(tr);
+        });
+      }
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const data = new FormData(form);
+        reservations.push({
+          name: data.get('name'),
+          phone: data.get('phone'),
+          date: data.get('date'),
+          time: data.get('time'),
+          guests: data.get('guests'),
+        });
+        localStorage.setItem('reservations', JSON.stringify(reservations));
+        form.reset();
+        render();
+      });
+
+      tbody.addEventListener('click', (e) => {
+        if (e.target.classList.contains('btn-delete')) {
+          reservations.splice(Number(e.target.dataset.i), 1);
+          localStorage.setItem('reservations', JSON.stringify(reservations));
+          render();
+        }
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>
