@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Movimientos - Restaurante Italiano</title>
+</head>
+<body>
+  <header class="site-header">
+    <h1>Trattoria Bella - Panel Admin</h1>
+    <nav class="main-nav">
+      <ul class="nav-list">
+        <li><a href="calendario.html" class="nav-link">Calendario</a></li>
+        <li><a href="reservas.html" class="nav-link">Reservas</a></li>
+        <li><a href="movimientos.html" class="nav-link active">Movimientos</a></li>
+        <li><a href="galeria.html" class="nav-link">Galería</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page-content">
+    <section class="transaction-form-section">
+      <h2>Registrar Movimiento</h2>
+      <form id="transaction-form" class="transaction-form">
+        <label for="concept">Concepto</label>
+        <input type="text" id="concept" name="concept" required />
+
+        <label for="type">Tipo</label>
+        <select id="type" name="type" required>
+          <option value="ingreso">Ingreso</option>
+          <option value="egreso">Egreso</option>
+        </select>
+
+        <label for="amount">Monto</label>
+        <input type="number" id="amount" name="amount" step="0.01" min="0" required />
+
+        <label for="trans-date">Fecha</label>
+        <input type="date" id="trans-date" name="date" required />
+
+        <button type="submit" class="btn-primary">Agregar</button>
+      </form>
+    </section>
+
+    <section class="transaction-summary-section">
+      <h2>Resumen</h2>
+      <p>Balance: <span id="balance">0.00</span></p>
+    </section>
+
+    <section class="transaction-list-section">
+      <h2>Historial de Movimientos</h2>
+      <table class="transaction-table">
+        <thead>
+          <tr>
+            <th>Fecha</th>
+            <th>Concepto</th>
+            <th>Tipo</th>
+            <th>Monto</th>
+          </tr>
+        </thead>
+        <tbody id="transaction-list"></tbody>
+      </table>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const form = document.getElementById('transaction-form');
+      const tbody = document.getElementById('transaction-list');
+      const balanceEl = document.getElementById('balance');
+      const transactions = JSON.parse(localStorage.getItem('transactions') || '[]');
+
+      function render() {
+        tbody.innerHTML = '';
+        let balance = 0;
+        transactions
+          .sort((a, b) => b.date.localeCompare(a.date))
+          .forEach((t) => {
+            const amount = Number(t.amount);
+            balance += t.type === 'ingreso' ? amount : -amount;
+            const tr = document.createElement('tr');
+            tr.className = `transaction-${t.type}`;
+            tr.innerHTML = `
+              <td>${t.date}</td>
+              <td>${t.concept}</td>
+              <td>${t.type}</td>
+              <td>${t.type === 'ingreso' ? '+' : '-'}${amount.toFixed(2)}</td>
+            `;
+            tbody.appendChild(tr);
+          });
+        balanceEl.textContent = balance.toFixed(2);
+      }
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const data = new FormData(form);
+        transactions.push({
+          concept: data.get('concept'),
+          type: data.get('type'),
+          amount: data.get('amount'),
+          date: data.get('date'),
+        });
+        localStorage.setItem('transactions', JSON.stringify(transactions));
+        form.reset();
+        render();
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>
