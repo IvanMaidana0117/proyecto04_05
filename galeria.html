@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Galería de Platos - Restaurante Italiano</title>
+</head>
+<body>
+  <header class="site-header">
+    <h1>Trattoria Bella - Panel Admin</h1>
+    <nav class="main-nav">
+      <ul class="nav-list">
+        <li><a href="calendario.html" class="nav-link">Calendario</a></li>
+        <li><a href="reservas.html" class="nav-link">Reservas</a></li>
+        <li><a href="movimientos.html" class="nav-link">Movimientos</a></li>
+        <li><a href="galeria.html" class="nav-link active">Galería</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main class="page-content">
+    <section class="dish-form-section">
+      <h2>Agregar Plato</h2>
+      <form id="dish-form" class="dish-form">
+        <label for="dish-name">Nombre</label>
+        <input type="text" id="dish-name" name="name" required />
+
+        <label for="dish-category">Categoría</label>
+        <select id="dish-category" name="category" required>
+          <option value="entrada">Entrada</option>
+          <option value="pasta">Pasta</option>
+          <option value="pizza">Pizza</option>
+          <option value="postre">Postre</option>
+          <option value="bebida">Bebida</option>
+        </select>
+
+        <label for="dish-image">URL de imagen</label>
+        <input type="url" id="dish-image" name="image" required />
+
+        <label for="dish-description">Descripción</label>
+        <textarea id="dish-description" name="description"></textarea>
+
+        <button type="submit" class="btn-primary">Agregar Plato</button>
+      </form>
+    </section>
+
+    <section class="gallery-filter-section">
+      <label for="filter">Filtrar por categoría:</label>
+      <select id="filter" class="gallery-filter">
+        <option value="all">Todas</option>
+        <option value="entrada">Entrada</option>
+        <option value="pasta">Pasta</option>
+        <option value="pizza">Pizza</option>
+        <option value="postre">Postre</option>
+        <option value="bebida">Bebida</option>
+      </select>
+    </section>
+
+    <section class="gallery-section">
+      <h2>Catálogo de Platos</h2>
+      <div id="gallery" class="gallery-grid"></div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      const form = document.getElementById('dish-form');
+      const gallery = document.getElementById('gallery');
+      const filter = document.getElementById('filter');
+      const dishes = JSON.parse(localStorage.getItem('dishes') || '[]');
+
+      function render() {
+        const cat = filter.value;
+        gallery.innerHTML = '';
+        dishes
+          .filter((d) => cat === 'all' || d.category === cat)
+          .forEach((d, i) => {
+            const card = document.createElement('article');
+            card.className = 'dish-card';
+            card.innerHTML = `
+              <img src="${d.image}" alt="${d.name}" class="dish-image" />
+              <h3 class="dish-name">${d.name}</h3>
+              <span class="dish-category">${d.category}</span>
+              <p class="dish-description">${d.description || ''}</p>
+              <button data-i="${i}" class="btn-delete">Eliminar</button>
+            `;
+            gallery.appendChild(card);
+          });
+      }
+
+      form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const data = new FormData(form);
+        dishes.push({
+          name: data.get('name'),
+          category: data.get('category'),
+          image: data.get('image'),
+          description: data.get('description'),
+        });
+        localStorage.setItem('dishes', JSON.stringify(dishes));
+        form.reset();
+        render();
+      });
+
+      filter.addEventListener('change', render);
+
+      gallery.addEventListener('click', (e) => {
+        if (e.target.classList.contains('btn-delete')) {
+          dishes.splice(Number(e.target.dataset.i), 1);
+          localStorage.setItem('dishes', JSON.stringify(dishes));
+          render();
+        }
+      });
+
+      render();
+    })();
+  </script>
+</body>
+</html>
